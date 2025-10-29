@@ -7,10 +7,11 @@ use App\Models\transactions;
 use App\Models\userAccounts;
 use App\Models\users_transactions;
 
-function createTransaction($accountID, $date, $cr, $db,$notes, $ref){
+function createTransaction($departmentID, $vehicleID, $date, $cr, $db,$notes, $ref){
     transactions::create(
         [
-            'account_id' => $accountID,
+            'department_id' => $departmentID,
+            'vehicle_id' => $vehicleID,
             'date' => $date,
             'cr' => $cr,
             'db' => $db,
@@ -23,7 +24,7 @@ function createTransaction($accountID, $date, $cr, $db,$notes, $ref){
 
 
 function getAccountBalance($id){
-    $transactions  = transactions::where('account_id', $id);
+    $transactions  = transactions::where('department_id', $id);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');

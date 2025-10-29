@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Products</h3>
+                    <h3>Vehicles</h3>
                     <a data-bs-toggle="modal" data-bs-target="#new" class="btn btn-primary">Create New</a>
                 </div>
                 <div class="card-body">
@@ -17,31 +17,43 @@
                             </ul>
                         </div>
                     @endif
+                    <form action="">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Department</span>
+                                    <select name="department" id="department" class="form-control">
+                                        <option value="All">All</option>
+                                        @foreach ($departments as $dept)
+                                            <option value="{{ $dept->id }}" {{ $dept->id == $department ? 'selected' : '' }}>
+                                                {{ $dept->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                           
+                            <div class="col-md-2">
+                                <input type="submit" value="Filter" class="btn btn-success w-100">
+                            </div>
+                        </div>
+                    </form>
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Unit</th>
-                            <th>Status</th>
+                            <th>Registration</th>
+                            <th>Department</th>
+                            <th>Type</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
-                            @foreach ($products as $key => $item)
+                            @foreach ($vehicles as $key => $vehicle)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->price }}</td>
-                                    <td>{{ $item->unit }}</td>
-                                    <td>
-                                        @if ($item->status == 'Active')
-                                            <span class="badge bg-success">Active</span>
-                                        @else
-                                            <span class="badge bg-danger">Inactive</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ $vehicle->r_no }}</td>
+                                    <td>{{ $vehicle->department->title }}</td>
+                                    <td>{{ $vehicle->type }}</td>
+
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
@@ -50,7 +62,8 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_{{ $item->id }}">
+                                                    <a class="dropdown-item" data-bs-toggle="modal"
+                                                        data-bs-target="#edit_{{ $vehicle->id }}">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit
                                                     </a>
@@ -59,32 +72,34 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="edit_{{ $item->id }}" tabindex="-1" aria-labelledby="edit_{{ $item->id }}Label" aria-hidden="true">
+                                <div class="modal fade" id="edit_{{ $vehicle->id }}" tabindex="-1"
+                                    aria-labelledby="edit_{{ $vehicle->id }}Label" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="edit_{{ $item->id }}Label">Edit Product</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <h5 class="modal-title" id="edit_{{ $vehicle->id }}Label">Edit Vehicle
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                             </div>
-                                            <form action="{{ route('products.update', $item->id) }}" method="post">
+                                            <form action="{{ route('vehicles.update', $vehicle->id) }}" method="post">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label for="name">Name</label>
-                                                        <input type="text" name="name" id="name" class="form-control" value="{{ $item->name }}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="price">Price</label>
-                                                        <input type="number" name="price" step="any" id="price" class="form-control" value="{{ $item->price }}">
+                                                        <label for="r_no">Registraion</label>
+                                                        <input type="text" name="r_no" id="r_no"
+                                                            class="form-control" value="{{ $vehicle->r_no }}">
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="unit">Unit</label>
-                                                        <input type="text" name="unit" id="unit" class="form-control" value="{{ $item->unit }}">
+                                                        <label for="type">Type</label>
+                                                        <input type="text" name="type" id="type"
+                                                            class="form-control" value="{{ $vehicle->type }}">
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
                                                     <button type="submit" class="btn btn-primary">Update</button>
                                                 </div>
                                             </form>
@@ -104,30 +119,35 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newLabel">Create Product</h5>
+                    <h5 class="modal-title" id="newLabel">Create Vehicle</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('products.store') }}" method="post">
+                <form action="{{ route('vehicles.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" name="name" id="name" class="form-control">
+                            <label for="r_no">Registraion</label>
+                            <input type="text" name="r_no" id="r_no" class="form-control">
                         </div>
                         <div class="form-group mt-2">
-                            <label for="price">Price</label>
-                            <input type="number" name="price" step="any" id="price" class="form-control">
+                            <label for="type">Type</label>
+                            <input type="text" name="type" id="type" class="form-control">
                         </div>
                         <div class="form-group mt-2">
-                            <label for="unit">Unit</label>
-                            <input type="text" name="unit" id="unit" class="form-control">
+                            <label for="department_id">Department</label>
+                            <select name="department_id" id="department_id" required class="form-control">
+                                <option value="">Select Department</option>
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}">{{ $department->title }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -153,13 +173,4 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
-
-    <script>
-        function refresh() {
-            var category = $("#category").find(":selected").val();
-            var brand = $("#brand").find(":selected").val();
-            var url = "{{ url('products/index/') }}/" + category + '/' + brand;
-            window.open(url, "_self");
-        }
-    </script>
 @endsection

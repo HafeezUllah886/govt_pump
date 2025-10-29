@@ -10,19 +10,18 @@ class sale extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function customer()
+    public function department()
     {
-        return $this->belongsTo(accounts::class, 'customer_id');
+        return $this->belongsTo(accounts::class, 'department_id');
+    }
+    public function Vehicle()
+    {
+        return $this->belongsTo(Vehicles::class, 'vehicle_id');
     }
 
     public function details()
     {
         return $this->hasMany(sale_details::class, 'sale_id');
-    }
-
-    public function warehouse()
-    {
-        return $this->belongsTo(warehouses::class);
     }
 
   

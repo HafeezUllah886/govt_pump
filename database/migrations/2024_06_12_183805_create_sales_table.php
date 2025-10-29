@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('accounts', 'id');
-            $table->foreignId('warehouse_id')->constrained('warehouses', 'id');
-            $table->string('customerName')->nullable();
+            $table->foreignId('department_id')->constrained('accounts', 'id');
+            $table->foreignId('vehicle_id')->constrained('vehicles', 'id');
+            $table->string('vouchar');
             $table->date('date');
             $table->float('total')->default(0);
             $table->text('notes')->nullable();
-            $table->string('payment_status');
             $table->bigInteger('refID');
             $table->timestamps();
         });

@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->string('unit');
+            $table->float('price', 10, 2);
+            $table->enum('status', ['Active', 'Inactive']);
             $table->timestamps();
         });
     }

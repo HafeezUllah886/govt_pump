@@ -37,33 +37,23 @@
                                 <table class="table table-striped table-hover">
                                     <thead>
                                         <th width="30%">Item</th>
+                                        <th class="text-center">Unit</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Qty</th>
-                                        <th class="text-end">Amount</th>
+                                        <th class="text-center">Amount</th>
                                         <th></th>
                                     </thead>
                                     <tbody id="products_list"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2" class="text-end">Total</th>
-                                            <th class="text-center" id="totalQty">0.00</th>
-                                            <th class="text-end" id="totalAmount">0.00</th>
+                                            <th colspan="4" class="text-end">Total</th>
+                                            <th class="text-center" id="totalAmount">0.00</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
                             <div class="col-3 mt-2">
-                                <div class="form-group">
-                                    <label for="warehouse">Warehouse</label>
-                                    <select class="form-control" name="warehouse" id="warehouse">
-                                        @foreach ($warehouses as $warehouse)
-                                            <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-2 mt-2">
                                 <div class="form-group">
                                     <label for="date">Date</label>
                                     <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}"
@@ -72,38 +62,30 @@
                             </div>
                             <div class="col-3 mt-2">
                                 <div class="form-group">
-                                    <label for="customerID">Customer</label>
-                                    <select name="customerID" id="customerID" class="selectize1">
-                                        @foreach ($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->title }} - {{ $customer->category }}</option>
+                                    <label for="vehicle_id">Vehicle</label>
+                                    <select name="vehicle_id" id="vehicle_id" class="selectize1">
+                                        @foreach ($vehicles as $vehicle)
+                                            <option value="{{ $vehicle->id }}">{{ $vehicle->r_no }} - {{ $vehicle->type }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                                <div class="form-group customerName mt-2">
-                                    <label for="customerName">Name</label>
-                                    <input type="text" name="customerName" id="customerName" class="form-control">
+                                  
                                 </div>
                             </div>
                           
-                            <div class="col-2 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
-                                    <label for="status">Payment Status</label>
-                                    <select name="status" id="status1" class="form-control">
-                                        <option value="paid">Paid</option>
-                                        <option value="pending">Pending</option>
-                                    </select>
+                                    <label for="vouchar">Vouchar Number</label>
+                                    <input type="text" name="vouchar" required id="vouchar" class="form-control">
                                 </div>
                             </div>
-                              <div class="col-2 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
-                                    <label for="account">Account</label>
-                                    <select name="accountID" id="account" class="selectize1">
-                                        @foreach ($accounts as $account)
-                                            <option value="{{ $account->id }}">{{ $account->title }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="status">Department</label>
+                                    <input type="text" readonly value="{{ $department->title }}" class="form-control">
+                                    <input type="hidden" readonly value="{{ $department->id }}" name="department_id">
                                 </div>
                             </div>
+                              
                             <div class="col-12 mt-2">
                                 <div class="form-group">
                                     <label for="notes">Notes</label>
@@ -166,8 +148,9 @@
                         var id = product.id;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="no-padding">' + product.name + '</td>';
-                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" step="any" value="0" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" step="any" value="0" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
+                        html += '<td class="no-padding text-center">' + product.unit + '</td>';
+                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" step="any" value="' + product.price + '" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
                         html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
                         html += '<input type="hidden" name="id[]" value="' + id + '">';
@@ -185,7 +168,7 @@
             var price = parseFloat($('#price_' + id).val());
 
             var amount = qty * price;
-            $("#amount_"+id).val(amount.toFixed(2));
+            $("#amount_"+id).val(amount.toFixed(0));
             updateTotal();
         }
 
@@ -197,7 +180,7 @@
                 total += parseFloat(inputValue);
             });
 
-            $("#totalAmount").html(total.toFixed(2));
+            $("#totalAmount").html(total.toFixed(0));
 
             var count = $("[id^='row_']").length;
             var numQty = 0;
@@ -219,37 +202,5 @@
             updateTotal();
         }
 
-
-    function checkAccount()
-    {
-        var id = $("#customerID").find(":selected").val();
-        if(id == 3)
-        {
-            $(".customerName").removeClass("d-none");
-            $('#status1 option').each(function() {
-            var optionValue = $(this).val();
-            if (optionValue === 'advanced' || optionValue === 'pending' || optionValue === 'partial') {
-                $(this).prop('disabled', true);
-            }
-            if (optionValue === 'paid') {
-                $(this).prop('selected', true);
-            }
-            });
-        }
-        else
-        {
-            $(".customerName").addClass("d-none");
-            $('#status1 option').each(function() {
-            var optionValue = $(this).val();
-            if (optionValue === 'advanced' || optionValue === 'pending' || optionValue === 'partial') {
-                $(this).prop('disabled', false);
-            }
-            });
-        }
-    }
-
-    $("#customerID").on("change", function(){
-        checkAccount();
-    });
     </script>
 @endsection

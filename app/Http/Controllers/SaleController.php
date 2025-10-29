@@ -11,6 +11,7 @@ use App\Models\sale_details;
 use App\Models\stock;
 use App\Models\transactions;
 use App\Models\units;
+use App\Models\Vehicles;
 use App\Models\warehouses;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
@@ -32,20 +33,21 @@ class SaleController extends Controller
     {
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? date('Y-m-d');
-        $sales = sale::whereBetween('date', [$from, $to])->get();
-        return view('sale.index', compact('sales', 'from', 'to'));
+        $sales = sale::whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+        $departments = accounts::active()->get();
+        return view('sale.index', compact('sales', 'from', 'to', 'departments'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $products = products::active()->get();
-        $customers = accounts::customerAndFactory()->get();
-        $accounts = accounts::business()->get();
-        $warehouses = warehouses::all();
-        return view('sale.create', compact('products', 'customers', 'accounts', 'warehouses'));
+        $department = accounts::find($request->department_id);
+        $vehicles = Vehicles::where('department_id', $request->department_id)->get();
+       
+        return view('sale.create', compact('products', 'department', 'vehicles'));
     }
 
     /**
@@ -53,7 +55,6 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-
         try
         {
             if($request->isNotFilled('id'))
@@ -64,13 +65,12 @@ class SaleController extends Controller
             $ref = getRef();
             $sale = sale::create(
                 [
-                  'customer_id'        => $request->customerID,
-                  'date'            => $request->date,
-                  'notes'           => $request->notes,
-                  'customerName'      => $request->customerName,
-                  'payment_status'  => $request->status,
-                  'warehouse_id'    => $request->warehouse,
-                  'refID'           => $ref,
+                  'department_id'  => $request->department_id,
+                  'vehicle_id'     => $request->vehicle_id,
+                  'vouchar'        => $request->vouchar,
+                  'date'           => $request->date,
+                  'notes'          => $request->notes,
+                  'refID'          => $ref,
                 ]
             );
 
@@ -88,19 +88,19 @@ class SaleController extends Controller
 
                 sale_details::create(
                     [
-                        'sale_id'    => $sale->id,
-                        'product_id'     => $id,
+                        'sale_id'       => $sale->id,
+                        'product_id'    => $id,
+                        'department_id'  => $request->department_id,
+                        'vehicle_id'     => $request->vehicle_id,
                         'price'         => $price,
                         'qty'           => $qty,
-                        'amount'        => $amount,
+                        'amount'        => round($amount),
                         'date'          => $request->date,
                         'refID'         => $ref,
                     ]
                 );
                 $product = products::find($id);
                 $note_details .= $qty . "x " . $product->name . " at " . number_format($price) . "<br>";
-                createStock($id, 0, $qty, $request->date, "Sold Notes: $request->notes", $ref, $request->warehouse);
-
                 }
             }
 
@@ -109,16 +109,7 @@ class SaleController extends Controller
                     'total' => $total,
                 ]
             );
-
-            if($request->status == 'paid')
-            {
-                createTransaction($request->customerID, $request->date, $total, $total, "Payment of Sale No. $sale->id <br> $note_details", $ref, 'Sale');
-                createTransaction($request->accountID, $request->date, $total, 0, "Payment of Sale No. $sale->id <br> $note_details", $ref, 'Sale');
-            }
-            else
-            {
-                createTransaction($request->customerID, $request->date, $total, 0, "Pending Amount of Sale No. $sale->id <br> $note_details", $ref, 'Sale');
-            }
+            createTransaction($request->department_id, $request->vehicle_id, $request->date, $total, 0, "Sale No. $sale->id Vouchar No. $sale->vouchar <br> $note_details", $ref);
             DB::commit();
             return back()->with('success', "Sale Created");
 
@@ -136,7 +127,7 @@ class SaleController extends Controller
      */
     public function show(sale $sale)
     {
-        return view('sale.view', compact('sale'));
+        return view('sale.print', compact('sale'));
     }
 
 
@@ -146,10 +137,8 @@ class SaleController extends Controller
     public function edit(sale $sale)
     {
         $products = products::orderby('name', 'asc')->get();
-        $customers = accounts::customerAndFactory()->get();
-        $accounts = accounts::business()->get();
-        $warehouses = warehouses::all();
-        return view('sale.edit', compact('products', 'customers', 'accounts', 'sale', 'warehouses'));
+        $vehicles = Vehicles::where('department_id', $sale->department_id)->get();
+        return view('sale.edit', compact('products', 'vehicles', 'sale'));
     }
 
     /**
@@ -165,72 +154,56 @@ class SaleController extends Controller
             }
             DB::beginTransaction();
           
-            foreach($sale->details as $product)
-            {
-                stock::where('refID', $product->refID)->delete();
-                $product->delete();
-            }
+          
             transactions::where('refID', $sale->refID)->delete();
 
             $sale->update(
                 [
-                    'customer_id'        => $request->customerID,
-                    'date'            => $request->date,
-                    'notes'           => $request->notes,
-                    'customerName'      => $request->customerName,
-                    'payment_status'  => $request->status,
-                    'warehouse_id'    => $request->warehouse,
+                  'department_id'  => $request->department_id,
+                  'vehicle_id'     => $request->vehicle_id,
+                  'vouchar'        => $request->vouchar,
+                  'date'           => $request->date,
+                  'notes'          => $request->notes,
                 ]
             );
 
             $ids = $request->id;
             $ref = $sale->refID;
-
             $total = 0;
             $note_details = "";
             foreach($ids as $key => $id)
             {
                 if($request->qty[$key] > 0)
                 {
-                    $qty = $request->qty[$key];
-              
+                $qty = $request->qty[$key]; 
                 $price = $request->price[$key];
                 $amount = $price * $qty;
                 $total += $amount;
 
                 sale_details::create(
                     [
-                        'sale_id'    => $sale->id,
-                        'product_id'     => $id,
+                        'sale_id'       => $sale->id,
+                        'product_id'    => $id,
+                        'department_id'  => $request->department_id,
+                        'vehicle_id'     => $request->vehicle_id,
                         'price'         => $price,
                         'qty'           => $qty,
-                        'amount'        => $amount,
+                        'amount'        => round($amount),
                         'date'          => $request->date,
                         'refID'         => $ref,
                     ]
                 );
                 $product = products::find($id);
                 $note_details .= $qty . "x " . $product->name . " at " . number_format($price) . "<br>";
-                createStock($id, $qty, 0, $request->date, "Purchased", $ref, $request->warehouse);
-
                 }
             }
+
             $sale->update(
                 [
-
-                    'total'       => $total,
+                    'total' => $total,
                 ]
             );
-
-             if($request->status == 'paid')
-            {   
-                createTransaction($request->customerID, $request->date, $total, $total, "Payment of Sale No. $sale->id <br> $note_details", $ref, 'Sale');
-                createTransaction($request->accountID, $request->date, $total, 0, "Payment of Sale No. $sale->id <br> $note_details", $ref, 'Sale');
-            }
-            else
-            {
-                createTransaction($request->customerID, $request->date, $total, 0, "Pending Amount of Sale No. $sale->id <br> $note_details", $ref, 'Sale');
-            }
+            createTransaction($request->department_id, $request->vehicle_id, $request->date, $total, 0, "Sale No. $sale->id Vouchar No. $sale->vouchar <br> $note_details", $ref);
             DB::commit();
             session()->forget('confirmed_password');
             return to_route('sale.index')->with('success', "Sale Updated");
@@ -252,11 +225,6 @@ class SaleController extends Controller
         {
             DB::beginTransaction();
             $sale = sale::find($id);
-            foreach($sale->details as $product)
-            {
-                stock::where('refID', $product->refID)->delete();
-                $product->delete();
-            }
             transactions::where('refID', $sale->refID)->delete();
             $sale->delete();
             DB::commit();

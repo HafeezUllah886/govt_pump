@@ -16,10 +16,9 @@ class productsSeeder extends Seeder
     public function run(): void
     {
         $data = [
-             ['name' => "Sheep", 'status' => 'Active'],
-            ['name' => "Cattle", 'status' => 'Active'],
-            ['name' => "Goat", 'status' => 'Active'],
-           
+             ['name' => "Petrol", 'unit' => 'Ltr', 'price' => 256.34, 'status' => 'Active'],
+             ['name' => "Diesel", 'unit' => 'Ltr', 'price' => 245.76, 'status' => 'Active'],
+             ['name' => "Engine Oil 4Ltr", 'unit' => 'Nos', 'price' => 4350, 'status' => 'Active'],
         ];
         products::insert($data);
     }

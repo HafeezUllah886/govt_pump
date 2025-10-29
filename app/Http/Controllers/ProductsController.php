@@ -45,7 +45,7 @@ class ProductsController extends Controller
             ]
         );
 
-        $product = products::create($request->only(['name']));
+        $product = products::create($request->only(['name', 'unit', 'price']));
 
         $units = $request->unit_names;
 
@@ -85,7 +85,7 @@ class ProductsController extends Controller
         );
 
         $product = products::find($id);
-        $product->update($request->only(['name', 'status']));
+        $product->update($request->only(['name', 'unit', 'price', 'status']));
 
         return redirect()->back()->with('success', 'Product Updated');
     }

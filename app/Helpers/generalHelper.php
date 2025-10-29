@@ -60,14 +60,14 @@ function lastDayOfPreviousYear() {
 
 function projectNameAuth()
 {
-    return "LIVE STOCK";
+    return "ATTOCK PUMP";
 }
 
 function projectNameHeader()
 {
-    return "LIVE STOCK";
+    return "ATTOCK PUMP";
 }
 function projectNameShort()
 {
-    return "LS";
+    return "AP";
 }

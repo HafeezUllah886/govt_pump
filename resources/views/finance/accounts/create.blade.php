@@ -21,37 +21,15 @@
                         <div class="row">
                             <div class="col-md-6 ">
                                 <div class="form-group">
-                                    <label for="title">Account Title</label>
+                                    <label for="title">Department</label>
                                     <input type="text" name="title" id="title" value="{{ old('title') }}"
                                         class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 ">
                                 <div class="form-group">
-                                    <label for="category">Category</label>
-                                    <select name="category" id="category" class="form-control" onchange="checkCat()">
-                                        <option value="Business">Business</option>
-                                        <option value="Customer">Customer</option>
-                                        <option value="Vendor">Vendor</option>
-                                        <option value="Factory">Factory</option>
-                                        <option value="Transporter">Transporter</option>
-                                        <option value="Butcher">Butcher</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mt-2" id="catBox">
-                                <div class="form-group">
-                                    <label for="type">Type</label>
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="Bank">Bank</option>
-                                        <option value="Cash">Cash</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mt-2 customer vendor factory transport">
-                                <div class="form-group ">
-                                    <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" value="{{ old('address') }}"
+                                    <label for="focal_person">Focal Person</label>
+                                    <input type="text" name="focal_person" id="focal_person" value="{{ old('focal_person') }}"
                                         class="form-control">
                                 </div>
                             </div>
@@ -79,40 +57,4 @@
 @endsection
 @section('page-js')
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
-    <script>
-        $(".customer").hide();
-        $(".selectize").selectize();
-
-        function checkCat() {
-            var cat = $("#category").find(":selected").val();
-            if (cat === "Business") {
-                $("#catBox").show();
-            } else {
-                $("#catBox").hide();
-            }
-            if (cat === "Customer") {
-                $(".customer").show();
-            } else {
-                $(".customer").hide();
-            }
-            if (cat === "Vendor") {
-                $(".vendor").show();
-            }
-            if (cat === "Factory") {
-                $(".factory").show();
-            }
-            if (cat === "Transport") {
-                $(".transport").show();
-            }
-            /*  else
-             {
-                 $(".vendor").hide();
-                 if(type === "Customer")
-                 {
-                     $(".customer").show();
-                 }
-             } */
-        }
-        checkCat();
-    </script>
 @endsection

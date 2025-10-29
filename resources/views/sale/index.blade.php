@@ -5,6 +5,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Sales</h3>
+                    <button mode="modal" data-bs-toggle="modal" data-bs-target="#new" class="btn btn-primary">Create Sale</button>
 
                 </div>
                 <div class="card-body">
@@ -42,18 +43,21 @@
                         <thead>
                             <th>#</th>
                             <th>Ref #</th>
-                            <th>Customer</th>
+                            <th>Voucher #</th>
+                            <th>Department</th>
+                            <th>Vehicle</th>
                             <th>Date</th>
                             <th>Amount</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
                             @foreach ($sales as $key => $sale)
-                              
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $sale->refID ?? "-" }}</td>
-                                    <td>{{ $sale->customerID != 3 ? $sale->customer->title : $sale->customerName . '(Walk-in)' }}</td>
+                                    <td>{{ $sale->vouchar ?? "-" }}</td>
+                                    <td>{{ $sale->department->title }}</td>
+                                    <td>{{ $sale->vehicle->r_no }}</td>
                                     <td>{{ date('d M Y', strtotime($sale->date)) }}</td>
                                     <td>{{ number_format($sale->total) }}</td>
                                  
@@ -93,6 +97,34 @@
                     </table>
                 </div>
                 
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="new" tabindex="-1" aria-labelledby="newLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newLabel">Salect Department</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('sale.create') }}" method="get">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Department</label>
+                            <select name="department_id" id="department_id" required class="form-control">
+                                <option value="">Select Department</option>
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}">{{ $department->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Continue</button>
+                </div>
+            </form>
             </div>
         </div>
     </div>

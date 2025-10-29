@@ -19,33 +19,19 @@
                     <form action="{{ route('account.update', $account->id) }}" method="post">
                         @csrf
                         @method('put')
-                        <input type="hidden" name="accountID" value="{{$account->id}}">
-                        <input type="hidden" name="type" value="{{$account->type}}">
+                        <input type="hidden" name="department_id" value="{{$account->id}}">
                         <div class="row">
                             <div class="col-md-6 ">
                                 <div class="form-group">
-                                    <label for="title">Account Title</label>
+                                    <label for="title">Department</label>
                                     <input type="text" name="title" id="title" value="{{ $account->title }}"
                                         class="form-control">
                                 </div>
                             </div>
-                         
-                            @if($account->category == "Business")
-                            <div class="col-md-6 mt-2" id="catBox">
+                            <div class="col-md-6 ">
                                 <div class="form-group">
-                                    <label for="type">Type</label>
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="Bank" {{ $account->type == 'Bank' ? 'selected' : '' }}>Bank</option>
-                                        <option value="Cash" {{ $account->type == 'Cash' ? 'selected' : '' }}>Cash</option>
-                                    </select>
-                                </div>
-                            </div>
-                            @endif
-                            @if($account->category != "Business")
-                            <div class="col-md-6 mt-2 customer supplier">
-                                <div class="form-group ">
-                                    <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" value="{{ $account->address }}"
+                                    <label for="focal_person">Focal Person</label>
+                                    <input type="text" name="focal_person" id="focal_person" value="{{ $account->focal_person }}"
                                         class="form-control">
                                 </div>
                             </div>
@@ -56,7 +42,7 @@
                                         class="form-control">
                                 </div>
                             </div>
-                            @endif
+                          
                             <div class="col-12 mt-3">
                                 <button type="submit" class="btn btn-secondary w-100">Update</button>
                             </div>

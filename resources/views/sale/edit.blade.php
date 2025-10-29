@@ -52,6 +52,7 @@
                                             <table class="table table-striped table-hover">
                                                 <thead>
                                                     <th width="30%">Item</th>
+                                                    <th class="text-center">Unit</th>
                                                     <th class="text-center">Price</th>
                                                     <th class="text-center">Qty</th>
                                                     <th class="text-end">Amount</th>
@@ -64,6 +65,7 @@
                                                     @endphp
                                                     <tr id="row_{{$id}}">
                                                         <td class="no-padding">{{$product->product->name}}</td>
+                                                        <td class="no-padding">{{$product->product->unit}}</td>
                                                        <td class="no-padding"><input type="number" name="price[]" required step="any" value="{{$product->price}}" min="0" class="form-control text-center no-padding" id="price_{{$id}}"></td>
                                                         <td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges({{$id}})" min="0" required step="any" value="{{$product->qty}}" class="form-control text-center no-padding" id="qty_{{$id}}"></td>
                                                         <td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="{{$product->amount}}" class="form-control text-center no-padding" id="amount_{{$id}}"></td>
@@ -74,8 +76,8 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <th colspan="2" class="text-end">Total</th>
-                                                        <th class="text-center" id="totalQty">0.00</th>
+                                                        <th colspan="4" class="text-end">Total</th>
+                                                        
                                                         <th class="text-end" id="totalAmount">0.00</th>
                                                         <th></th>
                                                     </tr>
@@ -85,55 +87,37 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-3 mt-2">
-                                                        <div class="form-group">
-                                                            <label for="warehouse">Warehouse</label>
-                                                            <select class="form-control" name="warehouse" id="warehouse">
-                                                                @foreach ($warehouses as $warehouse)
-                                                                    <option value="{{$warehouse->id}}" @selected($warehouse->id == $sale->warehouse_id)>{{$warehouse->name}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-2 mt-2">
-                                                        <div class="form-group">
-                                                            <label for="date">Date</label>
-                                                            <input type="date" name="date" id="date" value="{{ $sale->date }}" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                     <div class="col-3 mt-2">
-                                                        <div class="form-group">
-                                                            <label for="customer">Customer</label>
-                                                            <select name="customerID" id="customerID"  class="selectize1">
-                                                                @foreach ($customers as $customer)
-                                                                    <option value="{{ $customer->id }}" @selected($customer->id == $sale->customer_id)>{{ $customer->title }} - {{ $customer->category }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group customerName mt-2">
-                                                            <label for="customerName">Name</label>
-                                                            <input type="text" name="customerName" id="customerName" value="{{ $sale->customer->name }}" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-2 mt-2">
-                                                        <div class="form-group">
-                                                            <label for="status">Payment Status</label>
-                                                            <select name="status" id="status1" class="form-control">
-                                                                <option value="paid" @selected($sale->payment_status == 'paid')>Paid</option>
-                                                                <option value="pending" @selected($sale->payment_status == 'pending')>Pending</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                      <div class="col-2 mt-2">
-                                                        <div class="form-group">
-                                                            <label for="account">Account</label>
-                                                            <select name="accountID" id="account" class="selectize1">
-                                                                @foreach ($accounts as $account)
-                                                                    <option value="{{ $account->id }}">{{ $account->title }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
+<div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" id="date" value="{{ $sale->date }}"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="vehicle_id">Vehicle</label>
+                                    <select name="vehicle_id" id="vehicle_id" class="selectize1">
+                                        @foreach ($vehicles as $vehicle)
+                                            <option value="{{ $vehicle->id }}" @selected($vehicle->id == $sale->vehicle_id)>{{ $vehicle->r_no }} - {{ $vehicle->type }}</option>
+                                        @endforeach
+                                    </select>
+                                  
+                                </div>
+                            </div>                    
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="vouchar">Vouchar Number</label>
+                                    <input type="text" name="vouchar" required id="vouchar" class="form-control" value="{{ $sale->vouchar }}">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="status">Department</label>
+                                    <input type="text" readonly value="{{ $sale->department->title }}" class="form-control">
+                                    <input type="hidden" readonly value="{{ $sale->department->id }}" name="department_id">
+                                </div>
+                            </div>
                                                     <div class="col-12 mt-2">
                                                         <div class="form-group">
                                                             <label for="notes">Notes</label>
@@ -204,6 +188,7 @@
                         var id = product.id;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="no-padding">' + product.name + '</td>';
+                        html += '<td class="no-padding">' + product.unit + '</td>';
                         html += '<td class="no-padding"><input type="number" name="price[]" required step="any" value="'+product.price+'" min="0" class="form-control text-center no-padding" id="price_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
@@ -223,7 +208,7 @@
             var price = parseFloat($('#price_' + id).val());
 
             var amount = qty * price;
-            $("#amount_"+id).val(amount.toFixed(2));
+            $("#amount_"+id).val(amount.toFixed(0));
             updateTotal();
         }
         updateTotal();
@@ -236,17 +221,9 @@
                 total += parseFloat(inputValue);
             });
 
-            $("#totalAmount").html(total.toFixed(2));
-            var count = $("[id^='row_']").length;
-            var numQty = 0;
-            $("input[id^='qty_']").each(function() {
-                var value = parseFloat($(this).val());
-                var unit = $("")
-                if (!isNaN(value)) {
-                    numQty += value ;
-                }
-            });
-            $("#totalQty").html(count + "(" + numQty + ")");
+            $("#totalAmount").html(total.toFixed(0));
+           
+           
         }
 
         function deleteRow(id) {
@@ -256,41 +233,6 @@
             $('#row_'+id).remove();
             updateTotal();
         }
-
-        function checkAccount()
-    {
-        var id = $("#customerID").find(":selected").val();
-        console.log(id);
-        if(id == 3)
-        {
-            $(".customerName").removeClass("d-none");
-            $('#status1 option').each(function() {
-            var optionValue = $(this).val();
-            if (optionValue === 'advanced' || optionValue === 'pending' || optionValue === 'partial') {
-                $(this).prop('disabled', true);
-            }
-            if (optionValue === 'paid') {
-                $(this).prop('selected', true);
-            }
-            });
-        }
-        else
-        {
-            $(".customerName").addClass("d-none");
-            $('#status1 option').each(function() {
-            var optionValue = $(this).val();
-            if (optionValue === 'advanced' || optionValue === 'pending' || optionValue === 'partial') {
-                $(this).prop('disabled', false);
-            }
-            });
-        }
-    }
-   
-
-    $("#customerID").on("change", function(){
-        checkAccount();
-    });
-    checkAccount();
 
     </script>
 @endsection

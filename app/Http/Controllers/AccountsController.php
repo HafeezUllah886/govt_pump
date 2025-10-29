@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class AccountsController extends Controller
 {
-    public function index($filter)
+    public function index()
     {
-        $accounts = accounts::where('category', $filter)->orderBy('title', 'asc')->get();
+        $accounts = accounts::active()->get();
 
-        return view('finance.accounts.index', compact('accounts', 'filter'));
+        return view('finance.accounts.index', compact('accounts'));
     }
 
     /**
@@ -32,14 +32,7 @@ class AccountsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'title' => 'required',
-            ],
-            [
-                'title.required' => "Please Enter Account Title",
-            ]
-        );
+       
 
         try
         {
@@ -48,10 +41,8 @@ class AccountsController extends Controller
             $account = accounts::create(
                 [
                     'title' => $request->title,
-                    'type' => $request->type ?? "Cash",
-                    'category' => $request->category,
+                    'focal_person' => $request->focal_person,
                     'contact' => $request->contact,
-                    'address' => $request->address,
                 ]
             );
                
@@ -101,20 +92,13 @@ class AccountsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate(
-            [
-                'title' => "required",
-            ],
-            [
-                'title.required' => "Please Enter Account Title",
-            ]
-        );
+       
         $account = accounts::find($id)->update(
             [
                 'title' => $request->title,
+                'focal_person' => $request->focal_person,
                 'contact' => $request->contact ?? null,
-                'address' => $request->address ?? null,
-                'type' => $request->type ?? "Cash",
+                
             ]
         );
 

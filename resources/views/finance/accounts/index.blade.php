@@ -4,19 +4,15 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>{{ $filter }} Accounts</h3>
+                    <h3>Departments</h3>
                 </div>
                 <div class="card-body">
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
                             <th>Title</th>
-                            @if ($filter == 'Business')
-                                <th>Type</th>
-                            @endif
-                            @if ($filter == 'Vendor' || $filter == 'Customer' || $filter == 'Factory' || $filter == 'Transport')
-                                <th>Address</th>
-                            @endif
+                            <th>Focal Person</th>
+                            <th>Contact</th>
                             <th>Status</th>
                             <th>Current Balance</th>
                             <th>Action</th>
@@ -26,16 +22,13 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $account->title }}</td>
-                                    @if ($filter == 'Business')
-                                        <td>{{ $account->type }}</td>
-                                    @endif
-                                    @if ($filter == 'Vendor' || $filter == 'Customer' || $filter == 'Factory' || $filter == 'Transport')
-                                        <td>{{ $account->address }}</td>
-                                    @endif
+                                    <td>{{ $account->focal_person }}</td>
+                                    <td>{{ $account->contact }}</td>
+                                   
                                     <td><a href="{{ route('account.status', [$account->id]) }}"
                                             class="badge bg-{{ $account->status == 'Active' ? 'success' : 'danger' }}">{{ $account->status }}</a>
                                     </td>
-                                    <td>{{ number_format(getAccountBalance($account->id)) }}</td>
+                                    <td>{{-- {{ number_format(getAccountBalance($account->id)) }} --}}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

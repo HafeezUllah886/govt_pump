@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('type')->nullable();
-            $table->string('category');
+            $table->string('focal_person');
             $table->string('contact')->nullable();
-            $table->string('address')->nullable();
             $table->string('status')->default('Active');
             $table->timestamps();
         });

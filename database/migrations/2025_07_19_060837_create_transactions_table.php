@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('account_id')->constrained('accounts','id');
+            $table->foreignId('department_id')->constrained('accounts','id');
+            $table->foreignId('vehicle_id')->nullable()->constrained('vehicles','id');
             $table->date('date');
             $table->float('cr')->default(0);
             $table->float('db')->default(0);
