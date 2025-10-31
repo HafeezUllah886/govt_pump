@@ -42,7 +42,6 @@
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
-                            <th>Ref #</th>
                             <th>Voucher #</th>
                             <th>Department</th>
                             <th>Vehicle</th>
@@ -54,7 +53,6 @@
                             @foreach ($sales as $key => $sale)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $sale->refID ?? "-" }}</td>
                                     <td>{{ $sale->vouchar ?? "-" }}</td>
                                     <td>{{ $sale->department->title }}</td>
                                     <td>{{ $sale->vehicle->r_no }}</td>
