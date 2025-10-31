@@ -39,13 +39,15 @@ class ProductsController extends Controller
         $request->validate(
             [
                 'name' => "unique:products,name",
+                'code' => "unique:products,code",
             ],
             [
             'name.unique' => "Product already Existing",
+            'code.unique' => "Product already Existing",
             ]
         );
 
-        $product = products::create($request->only(['name', 'unit', 'price']));
+        $product = products::create($request->only(['name', 'unit', 'price', 'code']));
 
         $units = $request->unit_names;
 
@@ -78,14 +80,16 @@ class ProductsController extends Controller
         $request->validate(
             [
                 'name' => "unique:products,name,".$id,
+                'code' => "unique:products,code,".$id,
             ],
             [
             'name.unique' => "Product already Existing",
+            'code.unique' => "Product already Existing",
             ]
         );
 
         $product = products::find($id);
-        $product->update($request->only(['name', 'unit', 'price', 'status']));
+        $product->update($request->only(['name', 'unit', 'price', 'code']));
 
         return redirect()->back()->with('success', 'Product Updated');
     }

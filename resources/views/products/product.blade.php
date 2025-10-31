@@ -20,7 +20,7 @@
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
-                            <th>ID</th>
+                            <th>Code</th>
                             <th>Name</th>
                             <th>Price</th>
                             <th>Unit</th>
@@ -31,7 +31,7 @@
                             @foreach ($products as $key => $item)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->code}}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->unit }}</td>
@@ -70,6 +70,10 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="code">Code</label>
+                                                        <input type="text" name="code" id="code" class="form-control" value="{{ $item->code }}">
+                                                    </div>
                                                     <div class="form-group">
                                                         <label for="name">Name</label>
                                                         <input type="text" name="name" id="name" class="form-control" value="{{ $item->name }}">
@@ -111,6 +115,10 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
+                            <label for="code">Code</label>
+                            <input type="text" name="code" id="code" class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
                             <label for="name">Name</label>
                             <input type="text" name="name" id="name" class="form-control">
                         </div>

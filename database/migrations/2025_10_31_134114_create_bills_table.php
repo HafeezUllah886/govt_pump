@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_details', function (Blueprint $table) {
+        Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sale_id')->constrained('sales', 'id');
-            $table->foreignId('product_id')->constrained('products', 'id');
             $table->foreignId('department_id')->constrained('accounts', 'id');
             $table->foreignId('vehicle_id')->constrained('vehicles', 'id');
-            $table->float('price', 10, 2);
-            $table->float('qty', 10, 2);
-            $table->float('amount');
-            $table->date('date');
-             $table->string('vouchar');
-            $table->bigInteger('refID');
+            $table->string('month');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->float('total')->default(0);
+            $table->date('bill_date')->nullable();
+            $table->bigInteger('bill_no');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_details');
+        Schema::dropIfExists('bills');
     }
 };

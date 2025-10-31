@@ -8,6 +8,7 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/setups.php';
 require __DIR__ . '/finance.php';
 require __DIR__ . '/sale.php';
+require __DIR__ . '/bills.php';
 require __DIR__ . '/reports.php';
 require __DIR__ . '/vehicles.php';
 

@@ -18,7 +18,13 @@
                 </div><!--end row-->
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="code">Code</label>
+                                <input type="text" name="code" id="code" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-10">
                             <div class="form-group">
                                 <label for="product">Product</label>
                                 <select name="product" class="selectize" id="product">
@@ -70,8 +76,7 @@
                                     </select>
                                   
                                 </div>
-                            </div>
-                          
+                            </div>                    
                             <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="vouchar">Vouchar Number</label>
@@ -201,6 +206,41 @@
             $('#row_'+id).remove();
             updateTotal();
         }
+
+
+         function get_by_code() {
+            var code = $("#code").val();
+            $("#code").val('');
+            $.ajax({
+                url: "{{ url('sales/get_by_code/') }}/" + code,
+                method: "GET",
+                success: function(response) {
+                    if (response == "Not Found") {
+                        Toastify({
+                            text: "Product Not Found",
+                            className: "info",
+                            close: true,
+                            gravity: "top", // `top` or `bottom`
+                            position: "center", // `left`, `center` or `right`
+                            stopOnFocus: true, // Prevents dismissing of toast on hover
+                            style: {
+                                background: "linear-gradient(to right, #FF5733, #E70000)",
+                            }
+                        }).showToast();
+                    } else {
+                        getSingleProduct(response);
+                    }
+                }
+            });
+        }
+
+        var input = document.getElementById("code");
+        input.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            get_by_code();
+        }
+        });
 
     </script>
 @endsection

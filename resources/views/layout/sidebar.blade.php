@@ -70,6 +70,18 @@
                     
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('bills.index') }}">
+                        <i class="ri-shopping-cart-line"></i> <span data-key="t-forms">Bills</span>
+                    </a>
+                    
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('summary.index') }}">
+                        <i class="ri-shopping-cart-line"></i> <span data-key="t-forms">Summary</span>
+                    </a>
+                    
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarAccounts" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarAccounts">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Departments</span>
@@ -77,30 +89,20 @@
                     <div class="collapse menu-dropdown" id="sidebarAccounts">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('account.create') }}" class="nav-link" data-key="t-basic-elements">Create</a>
+                                <a href="{{ route('account.create') }}" class="nav-link" data-key="t-basic-elements">Create Department</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('account.index') }}" class="nav-link" data-key="t-form-select">
-                                    List </a>
+                                    Departments List </a>
                             </li>
-                        </ul>
-                    </div>
-                </li>
-               
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#vehicles" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-truck-line"></i> <span data-key="t-apps">Vehicles</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="vehicles">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
+                             <li class="nav-item">
                                 <a href="{{ route('vehicles.index') }}" class="nav-link" data-key="t-chat">Vehicles 
                                     List </a>
                             </li>
                         </ul>
                     </div>
                 </li>
+               
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#products" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
@@ -115,21 +117,6 @@
                         </ul>
                     </div>
                 </li>
-                
-               
-                 {{-- <li class="nav-item">
-                    <a class="nav-link menu-link" href="#reports" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-file-list-line"></i> <span data-key="t-apps">Reports</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="reports">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('reportBalanceSheet') }}" class="nav-link" data-key="t-chat">Balance Sheet </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li> --}}
             </ul>
  
         </div>
