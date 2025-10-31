@@ -57,27 +57,27 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                
-                <li class="nav-item">
+               {{--  <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('dashboard') }}">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
                 </li> 
-               
+                --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('sale.index') }}">
-                        <i class="ri-shopping-cart-line"></i> <span data-key="t-forms">Sales</span>
+                        <i class="ri-gas-station-line"></i> <span data-key="t-forms">Sales</span>
                     </a>
                     
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('bills.index') }}">
-                        <i class="ri-shopping-cart-line"></i> <span data-key="t-forms">Bills</span>
+                        <i class="ri-bill-line"></i> <span data-key="t-forms">Bills</span>
                     </a>
                     
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('summary.index') }}">
-                        <i class="ri-shopping-cart-line"></i> <span data-key="t-forms">Summary</span>
+                        <i class="ri-file-chart-line"></i> <span data-key="t-forms">Summary</span>
                     </a>
                     
                 </li>

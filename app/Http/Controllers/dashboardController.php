@@ -22,10 +22,7 @@ class dashboardController extends Controller
     {
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? date('Y-m-d');
-        
-       
-      
-
-        return view('dashboard.index', compact('from', 'to'));
+    
+        return to_route('sale.index', compact('from', 'to'));
     }
 }
