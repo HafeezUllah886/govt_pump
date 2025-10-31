@@ -75,12 +75,12 @@
                                                     </button>
                                                 </li>
                                               
-                                                <li>
+                                               {{--  <li>
                                                     <a class="dropdown-item text-danger" href="{{route('sale.delete', $bill->id)}}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
                                                         Delete
                                                     </a>
-                                                </li> 
+                                                </li> --}} 
                                             </ul>
                                         </div>
                                     </td>
